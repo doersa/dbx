@@ -222,6 +222,7 @@ const emit = defineEmits<{
   editorUpdate: [tabId: string, value: string];
   editorSelectionChange: [value: string];
   editorCursorChange: [pos: number];
+  previewChangesAvailable: [value: boolean];
   editorViewportChange: [tabId: string, viewport: { scrollTop: number; scrollLeft: number }];
   editorSelectionStateChange: [tabId: string, selection: { anchor: number; head: number }];
   formatError: [];
@@ -1121,6 +1122,10 @@ function requestQueryEditorExecuteInNewResultTab() {
   return queryEditorRef.value?.requestExecuteInNewResultTab();
 }
 
+function requestQueryEditorPreviewChanges(stackSql?: string) {
+  return queryEditorRef.value?.requestPreviewChanges?.(stackSql);
+}
+
 function shouldBlockQueryEditorExecutionShortcut(event: KeyboardEvent) {
   return queryEditorRef.value?.shouldBlockExecutionShortcut?.(event) ?? false;
 }
@@ -1169,6 +1174,7 @@ defineExpose({
   handleModRTarget,
   requestQueryEditorExecute,
   requestQueryEditorExecuteInNewResultTab,
+  requestQueryEditorPreviewChanges,
   shouldBlockQueryEditorExecutionShortcut,
   acceptQueryEditorExecutionViewport,
   pasteClipboardAsSqlInCondition,
@@ -1224,6 +1230,7 @@ defineExpose({
               @selection-change="emit('editorSelectionChange', $event)"
               @send-selection-to-ai="emit('sendSelectionToAi', $event)"
               @cursor-change="emit('editorCursorChange', $event)"
+              @preview-changes-available="emit('previewChangesAvailable', $event)"
               @viewport-change="emit('editorViewportChange', activeTab.id, $event)"
               @selection-state-change="emit('editorSelectionStateChange', activeTab.id, $event)"
               @format-error="emit('formatError')"
