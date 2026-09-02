@@ -24,6 +24,8 @@ export type ShortcutActionId =
   | "redo"
   | "selectAll"
   | "extendSelection"
+  | "addNextSelectionOccurrence"
+  | "selectAllSelectionOccurrences"
   | "uppercaseSelection"
   | "lowercaseSelection"
   | "exPasteSqlInCondition"
@@ -251,6 +253,18 @@ export const SHORTCUT_DEFINITIONS: ShortcutDefinition[] = [
     labelKey: "settings.shortcutExtendSelection",
     scope: "editor",
     defaultShortcut: "Alt+W",
+  },
+  {
+    id: "addNextSelectionOccurrence",
+    labelKey: "settings.shortcutAddNextSelectionOccurrence",
+    scope: "editor",
+    defaultShortcut: "Ctrl+G",
+  },
+  {
+    id: "selectAllSelectionOccurrences",
+    labelKey: "settings.shortcutSelectAllSelectionOccurrences",
+    scope: "editor",
+    defaultShortcut: "Ctrl+Mod+G",
   },
   {
     id: "uppercaseSelection",

@@ -18,6 +18,8 @@ describe("shortcutRegistry editor actions", () => {
     "undo",
     "redo",
     "selectAll",
+    "addNextSelectionOccurrence",
+    "selectAllSelectionOccurrences",
     "uppercaseSelection",
     "lowercaseSelection",
     "exPasteSqlInCondition",
@@ -233,6 +235,8 @@ describe("shortcutRegistry editor actions", () => {
     expect(shortcuts.redo).toBe("Shift+Mod+Z");
     expect(shortcuts.selectAll).toBe("Mod+A");
     expect(shortcuts.extendSelection).toBe("Alt+W");
+    expect(shortcuts.addNextSelectionOccurrence).toBe("Ctrl+G");
+    expect(shortcuts.selectAllSelectionOccurrences).toBe("Ctrl+Mod+G");
     expect(shortcuts.uppercaseSelection).toBe("Shift+Alt+U");
     expect(shortcuts.lowercaseSelection).toBe("Shift+Alt+L");
     expect(shortcuts.exPasteSqlInCondition).toBe("");
@@ -244,6 +248,16 @@ describe("shortcutRegistry editor actions", () => {
 
     expect(definition).toMatchObject({ scope: "editor", defaultShortcut: "Alt+W" });
     expect(DEFAULT_SHORTCUT_SETTINGS.extendSelection).toBe("Alt+W");
+  });
+
+  it("registers occurrence selection shortcuts for query editor multi-selection", () => {
+    const next = SHORTCUT_DEFINITIONS.find((item) => item.id === "addNextSelectionOccurrence");
+    const all = SHORTCUT_DEFINITIONS.find((item) => item.id === "selectAllSelectionOccurrences");
+
+    expect(next).toMatchObject({ scope: "editor", defaultShortcut: "Ctrl+G" });
+    expect(all).toMatchObject({ scope: "editor", defaultShortcut: "Ctrl+Mod+G" });
+    expect(shortcutToCodeMirrorKey(DEFAULT_SHORTCUT_SETTINGS.selectAllSelectionOccurrences)).toBe("Ctrl-Mod-g");
+    expect(findShortcutConflict("selectAllSelectionOccurrences", DEFAULT_SHORTCUT_SETTINGS.selectAllSelectionOccurrences, DEFAULT_SHORTCUT_SETTINGS)).toBeNull();
   });
 
   it("registers an IDEA/DataGrip-style Alt+/ shortcut for manually triggering completion", () => {
