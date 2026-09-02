@@ -43,6 +43,22 @@ describe("queryEditorOccurrenceSelection", () => {
     ]);
   });
 
+  it("word-expands every empty range when multiple cursors are active", () => {
+    // One cursor sits on a word, the second (Alt+click) is empty on another
+    // word: the single-cursor helper cannot run, so the native command
+    // word-expands every empty range and adds the next occurrence.
+    const view = createView("foo bar foo", EditorSelection.create([EditorSelection.range(0, 3), EditorSelection.cursor(4)]));
+
+    expect(addNextQueryEditorSelectionOccurrence(view)).toBe(true);
+
+    // "bar" has no further occurrence, so the selection stays at the two
+    // word ranges — the point is the empty cursor was expanded, not dropped.
+    expect(ranges(view)).toEqual([
+      { from: 0, to: 3 },
+      { from: 4, to: 7 },
+    ]);
+  });
+
   it("selects every occurrence of the selected text", () => {
     const view = createView("foo bar foo baz foo", EditorSelection.single(0, 3));
 

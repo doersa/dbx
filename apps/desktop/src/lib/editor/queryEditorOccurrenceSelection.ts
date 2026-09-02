@@ -17,9 +17,15 @@ function selectionOccurrenceQuery(state: EditorState): string | null {
 }
 
 export function addNextQueryEditorSelectionOccurrence(view: EditorView): boolean {
-  if (view.state.selection.ranges.some((range) => range.empty)) {
-    if (!selectCurrentWord(view)) return false;
+  const ranges = view.state.selection.ranges;
+  const hasEmptyRange = ranges.some((range) => range.empty);
+  if (hasEmptyRange && ranges.length > 1) {
+    // The single-cursor word-expansion helper cannot run with multiple
+    // cursors; CodeMirror's native command word-expands every empty range
+    // and adds the next occurrence of the shared query.
+    return selectNextOccurrence(view);
   }
+  if (hasEmptyRange && !selectCurrentWord(view)) return false;
   return selectNextOccurrence(view);
 }
 
